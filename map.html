@@ -10,107 +10,106 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="./index.css">
   </head>
   <body>
     <style>
-      *{
-        box-sizing: border-box;
-        margin: 0;
-      }
-        body{
-            font-family: "Poppins", sans-serif;
-            overflow-x: hidden;
-          }
-
-        .gray-text {
-          color: #BAB7B7;
-        }
-
-        .searchImg {
-          background-image: url("./assets/search.png");
-          background-repeat: no-repeat;
-          background-size: 20px;
-          background-position: 15px center;
-          background-color: #fff;
-        }
-        
-        .bg-none {
-          background-color: transparent;
-        }
-
-        .search:focus {
-          background-color: transparent;
-          color: #BAB7B7;
-        }
-        .form-control::placeholder  {
-          color: #BAB7B7;
-        }
-
-        .search {
-          padding-left: 50px;
-          padding-right: 200px;
-        }
-
-        .page{
-          display: flex;
-          flex-direction: column;
-          min-height: 100vh;
-          height: 150vw;
-          max-height: 100vh;
-        }
-
-        .btn-gradient {
-          background: linear-gradient(90deg, #6C0704 0%, #D20E07 100%);
-          color: #fff;
-        }
-
-        .start-75{
-          left: 75%;
-        }
-
-        .bottom-page{
-          background: linear-gradient(238.99deg, #6C0704 9.78%, #140201 90.22%);
-        }
-
-        .flex {
-          display: flex;
-        }
-
-        .w-80 {
-          width: 80%;
-        }
-
-        .w-60 {
-          width: 60%;
+        body {
+          overflow: hidden;
         }
         #map {
             height:  100%;
             background-color: #fff;
+            z-index: 1;
           }
-        @media screen  and (max-device-width: 1024px) {
           footer {
-            display: block;
+            height: 55px;
+            background: linear-gradient(90.26deg, #FEA90C 3.05%, #6C0704 59.69%);
+            z-index: 3;
           }
-          .flex {
-            justify-content: center;
+
+          #pop-up {
+            width: 250px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.25);
+            position: absolute;
+            height: 100%;
+            z-index: 2;
+            background-color: #fff;
           }
-          .img {
-            width: 0 !important;
+          #pop-up img {
+            margin-inline: 5%;
           }
-          .w-80, .w-60  {
+          .active {
+            display: block !important;
+          }
+
+          #streetview {
+            cursor: pointer;
+            position: absolute;
+            width: 300px;
+            height: 200px;
+            bottom: 65px;
+            background-size: cover;
+            background-repeat: no-repeat;
+            right: 10px;
+            border: 5px solid #FEA90C;
+            border-radius: 23px;
+            z-index: 2;
+            display: none;
+          }
+          #streetview h2{
+            position: relative;
+            top: -30px;
+            font-size: 20px;
+            color: #6C0704;
+          }
+          #logo {
+            position: relative;
+            width: 150px;
+            top: -30px;
+            left: 10px;
+          }
+          #go {
+            position: relative;
+            width: 100px;
+            bottom: -100px;
+            right: -50px;
+          }
+
+          #streetview-main {
+            background-color: aliceblue;
+            margin-left: 250px;
             width: 100%;
           }
-          .margin-res{
-            margin: 0 !important;
+          .carousel-item {
+            height: 100%;
           }
-          .btn-gradient {
-            width: 200px;
+          .carousel-inner {
+            height: 100%;
+            margin: auto;
           }
+          .carousel-item img{
+            height: 100%;
+            object-fit:contain;
+            margin: auto;
+          }
+
+          .carousel-control-next {
+            position: fixed;
+            right: 40px;
+            margin-top: 50px;
+          }
+          .carousel-control-prev {
+            position: fixed;
+            left: 300px;
+            margin-top: 50px;
+          }
+        @media screen  and (max-device-width: 1024px) {
  
         }
     </style>
     <div class="page">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary text-nowrap">
         <div class="container-fluid">
             <a class="navbar-brand mx-4" href="/">
                 <img src="./assets/logoNav.png" alt="Logo" height="50" class="d-inline-block align-text-top">
@@ -127,83 +126,404 @@
                 <a class="nav-link gray-text" href="#">How It Works</a>
               </li>
             </ul>
-            <form class="rounded searchImg me-5" role="search">
-              <input class="form-control bg-opacity-0 border-0 bg-none search" type="search" placeholder="Search" aria-label="Search">
+            <form class="rounded mx-2 w-40 search" role="search">
+              <input placeholder="Enter Location" class="form-control bg-opacity-0 border-0 bg-none " id="search" type="search"  list="building-names" placeholder="Search" aria-label="Search">
+              <datalist id="building-names">
+                  <option value="Marcelo H. Del Pilar">Marcelo H. Del Pilar</option>
+                  <option value="Mariano Ponce">Mariano Ponce</option>
+                  <option value="Pedro A. Paterno">Pedro A. Paterno</option>
+                  <option value="Maximo Viola">Maximo Viola</option>
+                  <option value="Ciriaco C. Contreras">Ciriaco C. Contreras</option>
+                  <option value="Trinidad P. Tecson">Trinidad P. Tecson</option>
+                  <option value="Graciano Lopez Jaena">Graciano Lopez Jaena</option>
+                  <option value="Jose Maria Panganiban">Jose Maria Panganiban</option>
+                  <option value="Jose P. Rizal">Jose P. Rizal</option>
+                  <option value="Pedro S. Laktaw">Pedro S. Laktaw</option>
+                  <option value="Juan Luna">Juan Luna</option>
+                  <option value="Antonio Luna">Antonio Luna</option>
+                  <option value="Antonio S. Bautista">Antonio S. Bautista</option>
+                  <option value="Felipe Salvador">Felipe Salvador</option>
+                  <option value="Administration Office">Administration Office</option>
+                  <option value="Lapu Lapu">Lapu Lapu</option>
+                  <option value="Emilio Jacinto">Emilio Jacinto</option>
+                  <option value="Diego Silang">Diego Silang</option>
+                  <option value="Deodato Arellano">Deodato Arellano</option>
+                  <option value="Ladislao Diwa">Ladislao Diwa</option>
+                  <option value="Artemio Ricarte">Artemio Ricarte</option>
+                  <option value="Pio Valenzuela">Pio Valenzuela</option>
+                  <option value="Gomburza">Gomburza</option>
+                  <option value="Gabriela Silang">Gabriela Silang</option>
+                  <option value="Melchora Aquino">Melchora Aquino</option>
+                  <option value="Canteen 1">Canteen 1</option>
+                  <option value="Apolinario Mabini">Apolinario Mabini</option>
+                  <option value="Emilio Aguinaldo">Emilio Aguinaldo</option>
+                  <option value="Andres Bonifacio">Andres Bonifacio</option>
+                  <option value="Gregorio H. Del Pilar">Gregorio H. Del Pilar</option>
+                  <option value="Teodoro Plata">Teodoro Plata</option>
+                  <option value="Isidoro D. Torres">Isidoro D. Torres</option>
+                  <option value="Eusebio Roque">Eusebio Roque</option>
+                  <option value="Anacleto F. Enriquez">Anacleto F. Enriquez</option>
+                  <option value="FEEMPCOOP Office">FEEMPCOOP Office</option>
+                  <option value="Building 1">Building 1</option>
+                  <option value="Building 2">Building 2</option>
+                  <option value="Building 3">Building 3</option>
+                  <option value="Building 4">Building 4</option>
+                  <option value="Building 5">Building 5</option>
+                  <option value="Building 6">Building 6</option>
+                  <option value="Building 7">Building 7</option>
+                  <option value="Building 8">Building 8</option>
+                  <option value="Building 9">Building 9</option>
+                  <option value="Building 10">Building 10</option>
+                  <option value="Building 11">Building 11</option>
+                  <option value="Building 12">Building 12</option>
+                  <option value="Building 13">Building 13</option>
+                  <option value="Building 14">Building 14</option>
+                  <option value="Building 15">Building 15</option>
+                  <option value="Building 16">Building 16</option>
+                  <option value="Building 17">Building 17</option>
+                  <option value="Building 18">Building 18</option>
+                  <option value="Building 19">Building 19</option>
+                  <option value="Building 20">Building 20</option>
+                  <option value="Building 21">Building 21</option>
+                  <option value="Building 22">Building 22</option>
+                  <option value="Building 23">Building 23</option>
+                  <option value="Building 24">Building 24</option>
+                  <option value="Building 25">Building 25</option>
+                  <option value="Building 26">Building 26</option>
+                  <option value="Building 27">Building 27</option>
+                  <option value="Building 28">Building 28</option>
+                  <option value="Building 29">Building 29</option>
+                  <option value="Building 30">Building 30</option>
+                  <option value="Building 31">Building 31</option>
+                  <option value="Building 32">Building 32</option>
+                  <option value="Building 33">Building 33</option>
+                  <option value="Building 34">Building 34</option>
+              </datalist>
             </form>
           </div>
         </div>
       </nav>
-      <div  id="map"></div>
+      <div class="d-flex" style="height: 80%;">
+      <div class="align-items-center flex-column pt-4"  style="display: none;" id="pop-up">
+        <img style="width: 90%; object-fit: contain;" src="./assets/bg.png" alt="">
+        <div style="width: 100%;" class="ps-3 pt-2">
+          <h2 style="font-size: 20px;">building Name</h2>
+          <h3 style="font-size: 15px;">alt Name</h3></div>
+          <div class="ps-3 d-flex flex-column align-items-center" style="width: 70px;">
+            <img style="width: 100%; cursor: pointer;" onclick="showEvac()" src="./assets/evacIcon.png" alt="">
+            <h1 style="font-size: .6rem;">Evacuation</h1>
+          </div>
+      </div>
+      <div class="w-100 active d-none" id="map"></div>
+      <div id="streetview-main" class="d-none carousel slide" data-bs-ride="carousel">
+        <img src="./assets/close.png" onclick="closeStreetView()" alt="" class="ps-2 pt-1" width="40" style="position: absolute; left: 100px; z-index: 2; cursor: pointer;">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/1.png" alt="slide 1">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/2.png" alt="slide 2">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/3.png" alt="slide 3">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/4.png" alt="slide 4">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/5.png" alt="slide 5">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/6.png" alt="slide 6">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/7.png" alt="slide 7">
+          </div>
+          <div class="carousel-item">
+            <img class="d-block w-100" src="./assets/buildingImgs/streetview/8.png" alt="slide 8">
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#streetview-main" role="button" data-bs-slide="prev">
+          <img src="./assets/prev.png" alt="" style="width: 60%;">
+        </a>
+        <a class="carousel-control-next" href="#streetview-main" role="button" data-bs-slide="next">
+          <img src="./assets/prev.png" alt="" style="width: 60%; transform: rotate(180deg);">
+        </a>
+      </div>
+      
+      <div id="streetview"  onclick="streetview()"><h2>AFGoes Street View</h2><img id="logo" src="./assets/logoNav.png" alt=""><img id="go" src="./assets/go.png" alt=""></div>
+      </div>
+      <footer></footer>
     </div>
     <script>
+
+      
     var bounds = [[0,0], [1840,3391]];
     var map = L.map('map', {
         crs: L.CRS.Simple,
         minZoom: -1.7,
         maxZoom: .6,
         zoomSnap: 0.1,
-        maxBounds: bounds
+        maxBounds: [[-500,-500], [1840+500,3391+500]]
     });
     var image = L.imageOverlay('./assets/map.png', bounds).addTo(map);
     map.fitBounds(bounds);
     var marker = L.icon({
         iconUrl: './assets/marker.png',
-        iconSize:     [38.5, 53], // size of the icon
-        iconAnchor:   [19, 53], // point of the icon which will correspond to marker's location
+        iconSize:     [38.5, 53], 
+        iconAnchor:   [19, 53],
     });
     var canteenMarker = L.icon({
         iconUrl: './assets/canteenMarker.png',
-        iconSize:     [38.5, 53], // size of the icon
-        iconAnchor:   [19, 53], // point of the icon which will correspond to marker's location
+        iconSize:     [38.5, 53],
+        iconAnchor:   [19, 53], 
     });
     var adminMarker = L.icon({
         iconUrl: './assets/adminMarker.png',
-        iconSize:     [40, 40], // size of the icon
-        iconAnchor:   [19, 40], // point of the icon which will correspond to marker's location
+        iconSize:     [38.5, 53], 
+        iconAnchor:   [19, 53], 
     });
-    var gab_silang = L.marker(L.latLng([ 440, 600 ]), {icon: marker}).addTo(map);
-    var mel_aquino = L.marker(L.latLng([ 700, 600 ]), {icon: marker}).addTo(map);
-    var canteen = L.marker(L.latLng([ 990, 600 ]), {icon: canteenMarker}).addTo(map);
-    var emilio_aguinaldo = L.marker(L.latLng([ 1550, 600 ]), {icon: marker}).addTo(map);
+    const buildings = {
+    "Marcelo H. Del Pilar": {
+      marker: L.marker(L.latLng([1600, 1550]), { icon: marker }).addTo(map),
+      alternateName: "Building 1"
+    },
+    "Mariano Ponce": {
+      marker: L.marker(L.latLng([1630, 1950]), { icon: marker }).addTo(map),
+      alternateName: "Building 2"
+    },
+    "Pedro A. Paterno": {
+      marker: L.marker(L.latLng([1570, 2480]), { icon: marker }).addTo(map),
+      alternateName: "Building 3"
+    },
+    "Maximo Viola": {
+      marker: L.marker(L.latLng([1110, 2660]), { icon: marker }).addTo(map),
+      alternateName: "Building 4"
+    },
+    "Ciriaco C. Contreras": {
+      marker: L.marker(L.latLng([960, 2550]), { icon: marker }).addTo(map),
+      alternateName: "Building 5"
+    },
+    "Trinidad P. Tecson": {
+      marker: L.marker(L.latLng([960, 1860]), { icon: marker }).addTo(map),
+      alternateName: "Building 6"
+    },
+    "Graciano Lopez Jaena": {
+      marker: L.marker(L.latLng([1320, 2350]), { icon: marker }).addTo(map),
+      alternateName: "Building 7"
+    },
+    "Jose Maria Panganiban": {
+      marker: L.marker(L.latLng([1135, 2120]), { icon: marker }).addTo(map),
+      alternateName: "Building 8"
+    },
+    "Jose P. Rizal": {
+      marker: L.marker(L.latLng([1360, 1650]), { icon: marker }).addTo(map),
+      alternateName: "Building 9"
+    },
+    "Pedro S. Laktaw": {
+      marker: L.marker(L.latLng([1260, 2150]), { icon: marker }).addTo(map),
+      alternateName: "Building 10"
+    },
+    "Juan Luna": {
+      marker: L.marker(L.latLng([1420, 2170]), { icon: marker }).addTo(map),
+      alternateName: "Building 11"
+    },
+    "Antonio Luna": {
+      marker: L.marker(L.latLng([1380, 2000]), { icon: marker }).addTo(map),
+      alternateName: "Building 12"
+    },
+    "Antonio S. Bautista": {
+      marker: L.marker(L.latLng([1120, 1710]), { icon: marker }).addTo(map),
+      alternateName: "Building 13"
+    },
+    "Felipe Salvador": {
+      marker: L.marker(L.latLng([1260, 1730]), { icon: marker }).addTo(map),
+      alternateName: "Building 14"
+    },
+    "SHS Office and Registrar": {
+      marker: L.marker(L.latLng([1220, 1885]), { icon: adminMarker }).addTo(map),
+      alternateName: "Building 14(2)"
+    },
+    "Administration Office": {
+      marker: L.marker(L.latLng([1220, 1500]), { icon: adminMarker }).addTo(map),
+      alternateName: "Building 15"
+    },
+    "Lapu Lapu": {
+      marker: L.marker(L.latLng([900, 1550]), { icon: marker }).addTo(map),
+      alternateName: "Building 16"
+    },
+    "Emilio Jacinto": {
+      marker: L.marker(L.latLng([775, 1600]), { icon: marker }).addTo(map),
+      alternateName: "Building 17"
+    },
+    "Diego Silang": {
+      marker: L.marker(L.latLng([650, 1600]), { icon: marker }).addTo(map),
+      alternateName: "Building 18"
+    },
+    "Deodato Arellano": {
+      marker: L.marker(L.latLng([365, 1530]), { icon: marker }).addTo(map),
+      alternateName: "Building 19"
+    },
+    "Ladislao Diwa": {
+      marker: L.marker(L.latLng([210, 2000]), { icon: marker }).addTo(map),
+      alternateName: "Building 20"
+    },
+    "Artemio Ricarte": {
+      marker: L.marker(L.latLng([210, 1565]), { icon: marker }).addTo(map),
+      alternateName: "Building 21"
+    },
+    "Pio Valenzuela": {
+      marker: L.marker(L.latLng([210, 1690]), { icon: marker }).addTo(map),
+      alternateName: "Building 22"
+    },
+    "Gomburza": {
+      marker: L.marker(L.latLng([210, 1450]), { icon: marker }).addTo(map),
+      alternateName: "Building 23"
+    },
+    "Gabriela Silang": {
+      marker: L.marker(L.latLng([440, 600]), { icon: marker }).addTo(map),
+      alternateName: "Building 24"
+    },
+    "Melchora Aquino": {
+      marker: L.marker(L.latLng([700, 600]), { icon: marker }).addTo(map),
+      alternateName: "Building 25"
+    },
+    "Canteen 1": {
+      marker: L.marker(L.latLng([1000, 600]), { icon: canteenMarker }).addTo(map),
+      alternateName: "Building 26"
+    },
+    "Apolinario Mabini": {
+      marker: L.marker(L.latLng([1240, 600]), { icon: marker }).addTo(map),
+      alternateName: "Building 27"
+    },
+    "Emilio Aguinaldo": {
+      marker: L.marker(L.latLng([1550, 600]), { icon: marker }).addTo(map),
+      alternateName: "Building 28"
+    },
+    "Andres Bonifacio": {
+      marker: L.marker(L.latLng([1580, 850]), { icon: marker }).addTo(map),
+      alternateName: "Building 29"
+    },
+    "Gregorio H. Del Pilar": {
+      marker: L.marker(L.latLng([1310, 1040]), { icon: marker }).addTo(map),
+      alternateName: "Building 30"
+    },
+    "Teodoro Plata": {
+      marker: L.marker(L.latLng([600, 1640]), { icon: marker }).addTo(map),
+      alternateName: "Building 31"
+    },
+    "Isidoro D. Torres": {
+      marker: L.marker(L.latLng([500, 2050]), { icon: marker }).addTo(map),
+      alternateName: "Building 32"
+    },
+    "Eusebio Roque": {
+      marker: L.marker(L.latLng([680, 1800]), { icon: marker }).addTo(map),
+      alternateName: "Building 33"
+    },
+    "Anacleto F. Enriquez": {
+      marker: L.marker(L.latLng([210, 2100]), { icon: marker }).addTo(map),
+      alternateName: "Building 34"
+    },
+    "Canteen 2": { 
+      marker: L.marker(L.latLng([1270, 2920]), { icon: canteenMarker }).addTo(map), 
+      alternateName: "" 
+    }, "Canteen 3": { 
+      marker: L.marker(L.latLng([365, 2100]), { icon: canteenMarker }).addTo(map), 
+      alternateName: "" 
+    }, "FEEMPCOOP Office": { 
+      marker: L.marker(L.latLng([920, 600]), { icon: adminMarker }).addTo(map), 
+      alternateName: "" 
+    }
+  };
+  var building_paramter = window.location.href.split("?")[1];
+  if (building_paramter != null) {
+    var building = decodeURI(building_paramter)
+    if (building.startsWith("Building")) { 
+      for (const key in buildings) { 
+        if (buildings.hasOwnProperty(key)) { 
+          if (building == buildings[key].alternateName) {
+            building = key
+          }
+        }
+      }
+    }
+    var latLngs = [buildings[building].marker.getLatLng()];
+    var markerBounds = L.latLngBounds(latLngs);
+    focusMarker(building)
 
-    var andres_bonifacio = L.marker(L.latLng([ 1580, 850 ]), {icon: marker}).addTo(map);
-    var gregorio_de_pilar = L.marker(L.latLng([ 1310, 1040 ]), {icon: marker}).addTo(map);
-
-    var gomburza = L.marker(L.latLng([ 210, 1450 ]), {icon: marker}).addTo(map);
-    var artemio_ricarte = L.marker(L.latLng([ 210, 1565 ]), {icon: marker}).addTo(map);
-    var pio_valenzuela = L.marker(L.latLng([ 210, 1690 ]), {icon: marker}).addTo(map);
-    var deodato_arellano = L.marker(L.latLng([ 365, 1530 ]), {icon: marker}).addTo(map);
-    var ladislao_diwa = L.marker(L.latLng([ 210, 2000 ]), {icon: marker}).addTo(map);
-
-    var teodoro_plata = L.marker(L.latLng([ 600, 1640 ]), {icon: marker}).addTo(map);
-    var diego_silang = L.marker(L.latLng([ 650, 1600 ]), {icon: marker}).addTo(map);
-    var emilio_jacinto = L.marker(L.latLng([ 775, 1600 ]), {icon: marker}).addTo(map);
-    var lapu_lapu = L.marker(L.latLng([ 900, 1550 ]), {icon: marker}).addTo(map);
-    var eusebio_roque = L.marker(L.latLng([ 680, 1800 ]), {icon: marker}).addTo(map);
-    var trinidad_tecson = L.marker(L.latLng([ 960, 1860 ]), {icon: marker}).addTo(map);
-    var ciriaco_contreras = L.marker(L.latLng([ 960, 2550 ]), {icon: marker}).addTo(map);
-
-    var canteen_3 = L.marker(L.latLng([ 365, 2100 ]), {icon: canteenMarker}).addTo(map);
-    var isidoro_torres = L.marker(L.latLng([ 500, 2050 ]), {icon: marker}).addTo(map);
-
-    var marcelo_h_del_pilar = L.marker(L.latLng([ 1600, 1550 ]), {icon: marker}).addTo(map);
-    var mariano_ponce = L.marker(L.latLng([ 1630, 1950 ]), {icon: marker}).addTo(map);
-    var jose_p_rizal = L.marker(L.latLng([ 1360, 1650 ]), {icon: marker}).addTo(map);
-    var antonio_luna = L.marker(L.latLng([ 1380, 2000 ]), {icon: marker}).addTo(map);
-    var juan_luna = L.marker(L.latLng([ 1420, 2200 ]), {icon: marker}).addTo(map);
-    var pedro_a_paterno = L.marker(L.latLng([ 1570, 2480 ]), {icon: marker}).addTo(map);
-    var felipe_salvador = L.marker(L.latLng([ 1260, 1730 ]), {icon: marker}).addTo(map);
-    var antonio_s_bautista = L.marker(L.latLng([ 1120, 1710 ]), {icon: marker}).addTo(map);
-    var pedro_laktaw = L.marker(L.latLng([ 1260, 2150 ]), {icon: marker}).addTo(map);
-    var jose_maria_panganiban = L.marker(L.latLng([ 1135, 2120 ]), {icon: marker}).addTo(map);
-    var graciano_lopez = L.marker(L.latLng([ 1320, 2350 ]), {icon: marker}).addTo(map);
-    var maximo_viola = L.marker(L.latLng([ 1110, 2660 ]), {icon: marker}).addTo(map);
-    var administration_office = L.marker(L.latLng([ 1220, 1500 ]), {icon: adminMarker}).addTo(map);
-    var shs_office_and_registrar = L.marker(L.latLng([ 1220, 1885 ]), {icon: adminMarker}).addTo(map);
-    var canteen_2 = L.marker(L.latLng([ 1270, 2920 ]), {icon: canteenMarker}).addTo(map);
-
+    map.flyTo(latLngs[0], 0.1);
+  }
+  var focusedMarker;
+  var iconsize;
+  var iconAnchor;
+  for (const key in buildings) { 
+      if (buildings.hasOwnProperty(key)) { 
+      buildings[key].marker.on('click', function(e) {
+        changeBackIcon()
+        focusMarker(key)
+      })
+    }
+  }
+  map.on('click', changeBackIcon)
+  function changeBackIcon() {
+    window.history.replaceState({}, document.title, "/map.html");
+    if (focusedMarker) {
+      var icon = focusedMarker.options.icon;
+      icon.options.iconSize = iconsize
+      icon.options.iconAnchor = iconAnchor
+      focusedMarker.setIcon(icon);
+      focusedMarker = null
+      document.getElementsByClassName('leaflet-left')[0].style.marginLeft = "0";
+    }
+    document.getElementById('pop-up').classList.remove("active");
+    document.getElementById('streetview').classList.remove("active");
+  }
+  function focusMarker(building) {
+      document.getElementsByClassName('leaflet-left')[0].style.marginLeft = "250px";
+    document.getElementById('pop-up').classList.add("active");
+    if (building == "Antonio S. Bautista") {
+      document.getElementById('streetview').classList.add("active");
+    }
+    document.querySelector("#pop-up h2").innerHTML = building.toUpperCase()
+    document.querySelector("#pop-up h3").innerHTML = buildings[building].alternateName
+    var url = "url('./assets/buildingImgs/preview/" + building.toUpperCase() + ".jpg')";
+    document.querySelector("#streetview").style.backgroundImage = url;
+    document.querySelector("#pop-up img").src = './assets/buildingImgs/preview/' + building.toUpperCase() + '.jpg'
+    document.querySelector("#pop-up img").addEventListener("error", function () {
+      document.querySelector("#pop-up img").src = './assets/buildingImgs/preview/none.png'
+    });
+    focusedMarker = buildings[building].marker;
+    var icon = buildings[building].marker.options.icon;
+    iconsize = icon.options.iconSize;
+    iconAnchor = icon.options.iconAnchor;
+    icon.options.iconSize = [38.5*1.5, 53*1.5];
+    icon.options.iconAnchor = [38.5*1.5/2, 53*1.5];
+    buildings[building].marker.setIcon(icon);
+  };
+  function streetview() {
+    document.getElementById('map').classList.remove('active')
+    document.getElementById('streetview').classList.remove('active')
+    
+    document.getElementById('streetview-main').classList.add('active')
+  }
+  function closeStreetView() {
+    document.getElementById('map').classList.add('active')
+    document.getElementById('streetview').classList.add('active')
+    
+    document.getElementById('streetview-main').classList.remove('active')
+  }
+  var evac = false;
+  function showEvac() {
+    if (evac) {
+      L.imageOverlay('./assets/map.png', bounds).addTo(map);
+    } else {
+      L.imageOverlay('./assets/mapEvac.png', bounds).addTo(map);
+    }
+    evac = !evac;
+  }
   </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="./search.js"></script>
     
   </body>
 </html>
