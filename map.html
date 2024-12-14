@@ -15,6 +15,7 @@
   <body>
     <style>
         body {
+          height: 100vh;
           overflow: hidden;
         }
         #map {
@@ -24,6 +25,9 @@
           }
           footer {
             height: 55px;
+            width: 100vw;
+            position: absolute;
+            bottom: -10px;
             background: linear-gradient(90.26deg, #FEA90C 3.05%, #6C0704 59.69%);
             z-index: 3;
           }
@@ -203,7 +207,7 @@
           </div>
         </div>
       </nav>
-      <div class="d-flex" style="height: 80%;">
+      <div class="d-flex" style="height: calc(100% - 55px);">
       <div class="align-items-center flex-column pt-4"  style="display: none;" id="pop-up">
         <img style="width: 90%; object-fit: contain;" src="./assets/bg.png" alt="">
         <div style="width: 100%;" class="ps-3 pt-2">
@@ -216,7 +220,7 @@
       </div>
       <div class="w-100 active d-none" id="map"></div>
       <div id="streetview-main" class="d-none carousel slide" data-bs-ride="carousel">
-        <img src="./assets/close.png" onclick="closeStreetView()" alt="" class="ps-2 pt-1" width="40" style="position: absolute; left: 100px; z-index: 2; cursor: pointer;">
+        <img src="./assets/close.png" onclick="closeStreetView()" alt="" class="ps-2 pt-1" width="40" style="position: absolute;  z-index: 2; cursor: pointer;">
         <div class="carousel-inner">
           <div class="carousel-item active">
             <img class="d-block w-100" src="./assets/buildingImgs/streetview/1.png" alt="slide 1">

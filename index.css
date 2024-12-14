@@ -45,8 +45,11 @@
 
     .btn-gradient {
       background: linear-gradient(90deg, #6C0704 0%, #D20E07 100%);
-      color: #fff;
       text-wrap: nowrap;
+    }
+
+    .btn-gradient:hover {
+      color: yellow !important;
     }
 
     .start-75{
