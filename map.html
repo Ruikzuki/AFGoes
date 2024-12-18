@@ -46,7 +46,6 @@
           .active {
             display: block !important;
           }
-
           #streetview {
             cursor: pointer;
             position: absolute;
@@ -101,15 +100,80 @@
           .carousel-control-next {
             position: fixed;
             right: 40px;
-            margin-top: 50px;
+            margin-top: 60px;
           }
           .carousel-control-prev {
             position: fixed;
             left: 300px;
-            margin-top: 50px;
+            margin-top: 60px;
+          }
+
+          #pop-up .text-content {
+              padding-left: 15px;
+          }
+          .evac-div img{
+            width: 40px !important;
+          }
+          .evac-div {
+            width: min-content !important;
           }
         @media screen  and (max-device-width: 1024px) {
- 
+          .main-div{
+            flex-direction: column-reverse !important;
+            flex-wrap: wrap;
+          }
+          .leaflet-left {
+            margin-left: 10px !important;
+          }
+          #streetview {
+            width: 160px;
+            height: 120px;
+            border-radius: 5px;
+            bottom: 215px;
+          }
+
+          #streetview h2{
+            font-size: 0.6rem;
+            top: -18px;
+            margin: 0;
+          }
+
+          #logo {
+            width: 80px;
+            top: -12px;
+          }
+
+          #go {
+            width: 90px;
+            bottom: -20px;
+            right: -70px;
+          }
+          .evac-div {
+            width: min-content !important;
+          }
+
+          .evac-div img{
+            width: 40px !important;
+          }
+          #pop-up {
+            padding-top: 10px !important;
+            flex-wrap: wrap;
+            align-items: flex-start !important;
+            height: 200px;
+            width: 100%;
+          }
+          #pop-up .text-content {
+            width: 60% !important;
+          }
+          .text-content h2{
+            font-size: 1rem !important;
+          }.text-content h3{
+            font-size: 0.8rem !important;
+          }
+          .bldngimg{
+            width: 30% !important;
+          }
+          
         }
     </style>
     <div class="page">
@@ -124,10 +188,10 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item  mx-4">
-                <a class="nav-link gray-text" href="#">About</a>
+                <a class="nav-link gray-text" href="/#about-us">About</a>
               </li>
               <li class="nav-item  mx-4">
-                <a class="nav-link gray-text" href="#">How It Works</a>
+                <a class="nav-link gray-text" href="/how-it-works.html">How It Works</a>
               </li>
             </ul>
             <form class="rounded mx-2 w-40 search" role="search">
@@ -207,16 +271,18 @@
           </div>
         </div>
       </nav>
-      <div class="d-flex" style="height: calc(100% - 55px);">
-      <div class="align-items-center flex-column pt-4"  style="display: none;" id="pop-up">
-        <img style="width: 90%; object-fit: contain;" src="./assets/bg.png" alt="">
-        <div style="width: 100%;" class="ps-3 pt-2">
+      <div class="d-flex main-div" style="height: calc(100% - 55px);">
+      <div class=" align-items-center pt-5"  style="display: none;" id="pop-up">
+        <img class="bldngimg pt-3" style="width: 90%; object-fit: contain;" src="./assets/bg.png" alt="">
+        <div style="width: 100%;" class="pt-3 text-content">
           <h2 style="font-size: 20px;">building Name</h2>
-          <h3 style="font-size: 15px;">alt Name</h3></div>
-          <div class="ps-3 d-flex flex-column align-items-center" style="width: 70px;">
+          <h3 style="font-size: 15px;">alt Name</h3>
+          <div class="evac-div d-flex flex-column align-items-center">
             <img style="width: 100%; cursor: pointer;" onclick="showEvac()" src="./assets/evacIcon.png" alt="">
             <h1 style="font-size: .6rem;">Evacuation</h1>
           </div>
+        </div>
+         
       </div>
       <div class="w-100 active d-none" id="map"></div>
       <div id="streetview-main" class="d-none carousel slide" data-bs-ride="carousel">
@@ -247,10 +313,10 @@
             <img class="d-block w-100" src="./assets/buildingImgs/streetview/8.png" alt="slide 8">
           </div>
         </div>
-        <a class="carousel-control-prev" href="#streetview-main" role="button" data-bs-slide="prev">
+        <a class="carousel-control-prev" id="carousel-control-prev" href="#streetview-main" role="button" data-bs-slide="prev">
           <img src="./assets/prev.png" alt="" style="width: 60%;">
         </a>
-        <a class="carousel-control-next" href="#streetview-main" role="button" data-bs-slide="next">
+        <a class="carousel-control-next" id="carousel-control-next" href="#streetview-main" role="button" data-bs-slide="next">
           <img src="./assets/prev.png" alt="" style="width: 60%; transform: rotate(180deg);">
         </a>
       </div>
@@ -478,13 +544,18 @@
       focusedMarker.setIcon(icon);
       focusedMarker = null
       document.getElementsByClassName('leaflet-left')[0].style.marginLeft = "0";
-    }
+    } 
+      document.getElementById('pop-up').style.display = 'none'
     document.getElementById('pop-up').classList.remove("active");
     document.getElementById('streetview').classList.remove("active");
   }
   function focusMarker(building) {
+    if (screen.width <= 1024) {
+      document.getElementById('pop-up').style.display = 'flex'
+    } else {
+      document.getElementById('pop-up').classList.add("active");
+    }
       document.getElementsByClassName('leaflet-left')[0].style.marginLeft = "250px";
-    document.getElementById('pop-up').classList.add("active");
     if (building == "Antonio S. Bautista") {
       document.getElementById('streetview').classList.add("active");
     }
@@ -505,12 +576,31 @@
     buildings[building].marker.setIcon(icon);
   };
   function streetview() {
+    if (screen.width <= 1024) {
+      document.getElementById('pop-up').style.display = 'none'
+      document.getElementById('streetview-main').style.marginLeft = '0px'
+      document.getElementById('carousel-control-next').style.right = '0px'
+      document.getElementById('carousel-control-prev').style.left = '0px'
+      document.getElementById('carousel-control-prev').style.width = '100px'
+      document.getElementById('carousel-control-next').style.width = '100px'
+    document.querySelector('.main-div').style.justifyContent = 'center'
+  }
     document.getElementById('map').classList.remove('active')
     document.getElementById('streetview').classList.remove('active')
     
     document.getElementById('streetview-main').classList.add('active')
   }
   function closeStreetView() {
+    if (screen.width <= 1024) {
+      document.getElementById('pop-up').style.display = 'flex'
+  } else {
+    document.getElementById('pop-up').classList.add('active')
+
+  }
+    document.querySelector('.main-div').style.justifyContent = 'unset'
+      document.getElementById('streetview-main').style.marginLeft = '250px'
+      document.getElementById('carousel-control-prev').style.width = 'null  '
+      document.getElementById('carousel-control-next').style.width = 'null'
     document.getElementById('map').classList.add('active')
     document.getElementById('streetview').classList.add('active')
     
@@ -525,6 +615,7 @@
     }
     evac = !evac;
   }
+
   </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="./search.js"></script>

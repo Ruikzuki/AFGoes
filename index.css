@@ -1,99 +1,168 @@
-*{
-    box-sizing: border-box;
-    margin: 0;
-  }
-    body{
-        font-family: "Poppins", sans-serif;
-        overflow-x: hidden;
+  *{
+      box-sizing: border-box;
+      margin: 0;
+    }
+      body{
+          font-family: "Poppins", sans-serif !important;
+          overflow-x: hidden;
+        }
+
+      .gray-text {
+        color: #BAB7B7;
       }
 
-    .gray-text {
-      color: #BAB7B7;
-    }
-
-
-    .bg-none {
-      background-color: transparent;
-    }
-
-    .search:focus {
-      background-color: transparent;
-      color: #BAB7B7;
-    }
-    .form-control::placeholder  {
-      color: #BAB7B7;
-    }
-
-    .search {
-      cursor: pointer;
-      background-image: url("./assets/search.png");
-      background-repeat: no-repeat;
-      background-size: 20px;
-      background-position: 15px center;
-      background-color: #fff;
-      padding-left: 50px;
-      width: 100%;
-    }
-
-    .page{
-      display: flex;
-      flex-direction: column;
-    min-height: 100vh;
-    height: 150vw;
-      max-height: 100vh;
-    }
-
-    .btn-gradient {
-      background: linear-gradient(90deg, #6C0704 0%, #D20E07 100%);
-      text-wrap: nowrap;
-    }
-
-    .btn-gradient:hover {
-      color: yellow !important;
-    }
-
-    .start-75{
-      left: 75%;
-    }
-
-    .bottom-page{
-      background: linear-gradient(238.99deg, #6C0704 9.78%, #140201 90.22%);
-    }
-
-    .flex {
-      display: flex;
-    }
-
-    .w-80 {
-      width: 80%;
-    }
-
-    .w-60 {
-      width: 60%;
-    }
-    .w-40 {
-      width: 40%;
-    }
-
-    @media screen and (max-width: 765px){
-      .margin-res{
-        margin: 10px !important;
+      .about-us{
+        margin-top: 10px;
+        margin-inline: 50px; 
       }
-    }
-    @media screen  and (max-width: 1024px) {
-      footer {
-        display: block;
+
+      #about-us {
+        margin-inline: 50px; 
       }
-      .flex {
-        justify-content: center;
+      .bg-none {
+        background-color: transparent;
       }
-      .img {
-        width: 0 !important;
+
+      .search:focus {
+        background-color: transparent;
+        color: #BAB7B7;
       }
-      .w-80, .w-60, .w-40  {
+      .form-control::placeholder  {
+        color: #BAB7B7;
+      }
+
+      .search {
+        cursor: pointer;
+        background-image: url("./assets/search.png");
+        background-repeat: no-repeat;
+        background-size: 20px;
+        background-position: 15px center;
+        background-color: #fff;
+        padding-left: 50px;
         width: 100%;
       }
-      .btn-gradient {
-        width: 200px;
+
+      .page{
+        display: flex;
+        flex-direction: column;
+      min-height: 100vh;
+      height: 150vw;
+        max-height: 100vh;
       }
-    }
+
+      .btn-gradient {
+        background: linear-gradient(90deg, #6C0704 0%, #D20E07 100%);
+        text-wrap: nowrap;
+        width: 30%;
+      }
+
+      .btn-gradient:hover {
+        color: yellow !important;
+      }
+
+      .start-75{
+        left: 75%;
+      }
+
+      .bottom-page{
+        background: linear-gradient(238.99deg, #6C0704 9.78%, #140201 90.22%);
+      }
+
+      .flex {
+        display: flex;
+      }
+
+      .w-80 {
+        width: 80%;
+      }
+
+      .w-60 {
+        width: 60%;
+      }
+      .w-40 {
+        width: 40%;
+      }
+
+      .img-div {
+        background-image: url(./assets/mapImg.png); background-size: min(50vw, 900px); 
+        background-repeat: no-repeat;  
+        background-position: 95% center;
+        margin-left: 3rem;
+      }
+      .mobile-mapImg {
+        display: none;
+      }
+
+      .img {
+        width: 100% !important;
+      }
+
+      .img img{
+        width: 100%;
+        max-width: 300px;
+      }
+
+      footer h2{
+        font-size: calc(0.4rem + 1vw);
+      }
+
+      .about-us-div {
+        height: 80vh; 
+      }
+      @media screen and (max-width: 765px){
+        .margin-res{
+          margin: 10px !important;
+        }
+        .img-div{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          margin-left: 0rem;
+          background-image: unset;
+        }
+        .mobile-mapImg{
+          width: 90%;
+          display: block;
+        }
+
+        button{
+          font-family: 'Poppins'!important;
+
+        }
+        .btn-gradient {
+          width: 50%;
+          height: 40px;
+          margin-top: 20px;
+          font-size: 1rem !important  ;
+        }
+      }
+      @media screen  and (max-width: 1024px) {
+        .about-us-div {
+          height: unset; 
+          padding-block: 100px;
+        }
+        footer {
+          display: block;
+        }
+        .flex {
+          justify-content: center;
+        }
+        .img {
+          width: 500px !important;
+          margin-top: 20px;
+          margin-left: 20px;
+          align-self: flex-start;
+        }
+        .img img {
+          width: 100% !important;
+        }
+        .w-80, .w-60, .w-40  {
+          width: 100%;
+        }
+        button[type='submit'] {
+          width: 100px !important;
+        }
+        input, textarea {
+          font-size:  min(3vw, 15px) !important;
+        }
+      }
